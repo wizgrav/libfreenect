@@ -74,6 +74,9 @@ freenect_video_format current_format = FREENECT_VIDEO_RGB;
 freenect_smoothing_mode requested_smoothing = FREENECT_SMOOTHING_HOLE_FILLING_DEPTH_SMOOTHING_ENABLED;
 freenect_smoothing_mode current_smoothing = FREENECT_SMOOTHING_HOLE_FILLING_DEPTH_SMOOTHING_ENABLED;
 
+freenect_range_mode requested_range = FREENECT_RANGE_DEFAULT;
+freenect_range_mode current_range = FREENECT_RANGE_DEFAULT;
+
 pthread_cond_t gl_frame_cond = PTHREAD_COND_INITIALIZER;
 int got_rgb = 0;
 int got_depth = 0;
@@ -186,6 +189,12 @@ void keyPressed(unsigned char key, int x, int y)
 			requested_smoothing = FREENECT_SMOOTHING_HOLE_FILLING_DEPTH_SMOOTHING_ENABLED;
 		else
 			requested_smoothing = FREENECT_SMOOTHING_DISABLED;
+	}
+	if (key == 'n') {
+		if (requested_range == FREENECT_RANGE_DEFAULT)
+			requested_range = FREENECT_RANGE_NEAR_MODE;
+		else
+			requested_range = FREENECT_RANGE_DEFAULT;
 	}
 }
 
@@ -339,6 +348,10 @@ void *freenect_threadfunc(void *arg)
 		if (requested_smoothing != current_smoothing){
 			freenect_set_smoothing_mode(f_dev, requested_smoothing);
 			current_smoothing = requested_smoothing;
+		}
+		if (requested_range != current_range){
+			freenect_set_range_mode(f_dev, requested_range);
+			current_range = requested_range;
 		}
 	}
 

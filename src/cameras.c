@@ -1351,6 +1351,31 @@ int freenect_set_smoothing_mode(freenect_device* dev, const freenect_smoothing_m
 	}
 }
 
+int freenect_set_range_mode(freenect_device* dev, const freenect_range_mode mode)
+{
+	if (dev->hwrev != HWREV_K4W_0)
+		return -1;
+
+	int retval = 0;
+	switch(mode) {
+	case FREENECT_RANGE_DEFAULT:
+		retval = write_register(dev, 0x0015, 0x001E);
+		if (retval != 0)
+			return retval;
+		usleep(100000);
+		retval = write_register(dev, 0x02EF, 0x0190);
+		break;
+	case FREENECT_RANGE_NEAR_MODE:
+		retval = write_register(dev, 0x0015, 0x0007);
+		if (retval != 0)
+			return retval;
+		usleep(100000);
+		retval = write_register(dev, 0x02EF, 0x0000);
+		break;
+	}
+	return retval;
+}
+
 int freenect_set_depth_buffer(freenect_device *dev, void *buf)
 {
 	return stream_setbuf(dev->parent, &dev->depth, buf);

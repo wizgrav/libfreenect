@@ -133,6 +133,12 @@ typedef enum {
 	FREENECT_SMOOTHING_HOLE_FILLING_DEPTH_SMOOTHING_ENABLED = 1,
 } freenect_smoothing_mode;
 	
+/// Enumeration of range modes
+typedef enum {
+	FREENECT_RANGE_DEFAULT   = 0, /**< default range */
+	FREENECT_RANGE_NEAR_MODE = 1, /**< near mode. Supported by Kinect for Windows only */
+} freenect_range_mode;
+
 /// Enumeration of LED states
 /// See http://openkinect.org/wiki/Protocol_Documentation#Setting_LED for more information.
 typedef enum {
@@ -630,7 +636,19 @@ FREENECTAPI int freenect_set_depth_mode(freenect_device* dev, const freenect_fra
  * @return 0 on success, < 0 on error
  */
 FREENECTAPI int freenect_set_smoothing_mode(freenect_device* dev, const freenect_smoothing_mode mode);
-	
+
+/**
+ * Set the range mode. The near mode introduced with the Kinect for
+ * Windows device allows the sensor to see objects closer to it. The
+ * depth stream must be active as this appears to be reset when it is
+ * started.
+ *
+ * @param mode New range mode
+ *
+ * @return 0 on success, < 0 on error
+ */
+FREENECTAPI int freenect_set_range_mode(freenect_device* dev, const freenect_range_mode mode);
+		
 #ifdef __cplusplus
 }
 #endif
