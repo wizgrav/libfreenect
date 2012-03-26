@@ -625,7 +625,7 @@ FREENECTAPI int freenect_set_depth_mode(freenect_device* dev, const freenect_fra
  * Enables or disables hole filling/depth smoothing.  The depth stream
  * must be active as this appears to be reset when it is started.
  *
- * @param enable Whether to enable hole filling/depth smoothing
+ * @param mode New smoothing mode
  *
  * @return 0 on success, < 0 on error
  */
