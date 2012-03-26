@@ -71,6 +71,9 @@ int freenect_angle = 0;
 freenect_video_format requested_format = FREENECT_VIDEO_RGB;
 freenect_video_format current_format = FREENECT_VIDEO_RGB;
 
+freenect_smoothing_mode requested_smoothing = FREENECT_SMOOTHING_HOLE_FILLING_DEPTH_SMOOTHING_ENABLED;
+freenect_smoothing_mode current_smoothing = FREENECT_SMOOTHING_HOLE_FILLING_DEPTH_SMOOTHING_ENABLED;
+
 pthread_cond_t gl_frame_cond = PTHREAD_COND_INITIALIZER;
 int got_rgb = 0;
 int got_depth = 0;
@@ -177,6 +180,12 @@ void keyPressed(unsigned char key, int x, int y)
 		if (freenect_angle < -30) {
 			freenect_angle = -30;
 		}
+	}
+	if (key == 'm') {
+		if (requested_smoothing == FREENECT_SMOOTHING_DISABLED)
+			requested_smoothing = FREENECT_SMOOTHING_HOLE_FILLING_DEPTH_SMOOTHING_ENABLED;
+		else
+			requested_smoothing = FREENECT_SMOOTHING_DISABLED;
 	}
 }
 
@@ -327,6 +336,10 @@ void *freenect_threadfunc(void *arg)
 			freenect_start_video(f_dev);
 			current_format = requested_format;
 		}
+		if (requested_smoothing != current_smoothing){
+			freenect_set_smoothing_mode(f_dev, requested_smoothing);
+			current_smoothing = requested_smoothing;
+		}
 	}
 
 	printf("\nshutting down streams...\n");
@@ -368,7 +381,7 @@ int main(int argc, char **argv)
 		return 1;
 	}
 
-	freenect_set_log_level(f_ctx, FREENECT_LOG_SPEW);
+	freenect_set_log_level(f_ctx, FREENECT_LOG_INFO);
 	freenect_select_subdevices(f_ctx, (freenect_device_flags)(FREENECT_DEVICE_CAMERA));
 
 	int nr_devices = freenect_num_devices (f_ctx);
