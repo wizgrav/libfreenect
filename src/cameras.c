@@ -1341,14 +1341,18 @@ int freenect_set_depth_mode(freenect_device* dev, const freenect_frame_mode mode
 
 int freenect_set_smoothing_mode(freenect_device* dev, const freenect_smoothing_mode mode)
 {
+	int retval = -1;
+	
 	switch(mode) {
 	case FREENECT_SMOOTHING_DISABLED:
-		return write_register(dev, 0x16, 0x00);
+		retval = write_register(dev, 0x16, 0x00);
 		break;
 	case FREENECT_SMOOTHING_HOLE_FILLING_DEPTH_SMOOTHING_ENABLED:
-		return write_register(dev, 0x16, 0x01);
+		retval = write_register(dev, 0x16, 0x01);
 		break;
 	}
+
+	return retval;
 }
 
 int freenect_set_range_mode(freenect_device* dev, const freenect_range_mode mode)
