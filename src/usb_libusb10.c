@@ -208,7 +208,7 @@ FN_INTERNAL int fnusb_open_subdevices(freenect_device *dev, int index)
 					/* The good old kinect that tilts and tweets */
 					ctx->zero_plane_res = 322;
 				}
-				
+				printf("desc.bcdDevice: %d,  ctx->enabled_subdevices: %d, ctx->zero_plane_res: %d\n",desc.bcdDevice,ctx->enabled_subdevices,ctx->zero_plane_res);
 #ifndef _WIN32
 				// Detach an existing kernel driver for the device
 				res = libusb_kernel_driver_active(dev->usb_cam.dev, 0);
