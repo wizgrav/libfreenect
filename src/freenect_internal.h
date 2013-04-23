@@ -133,6 +133,8 @@ static inline int32_t fn_le32s(int32_t s)
 #define PID_NUI_AUDIO 0x02ad
 #define PID_NUI_CAMERA 0x02ae
 #define PID_NUI_MOTOR 0x02b0
+#define PID_K4W_CAMERA 0x02bf
+#define PID_K4W_AUDIO 0x02be
 
 typedef struct {
 	int running;
