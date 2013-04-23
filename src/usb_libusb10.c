@@ -189,7 +189,7 @@ FN_INTERNAL int fnusb_open_subdevices(freenect_device *dev, int index)
 
 		if (desc.idVendor != VID_MICROSOFT)
 			continue;
-
+		res = 0;
 		// Search for the camera
 		if ((ctx->enabled_subdevices & FREENECT_DEVICE_CAMERA) && !dev->usb_cam.dev && (desc.idProduct == PID_NUI_CAMERA || desc.idProduct == PID_K4W_CAMERA)) {
 			// If the index given by the user matches our camera index
@@ -233,8 +233,12 @@ FN_INTERNAL int fnusb_open_subdevices(freenect_device *dev, int index)
 				nr_cam++;
 			}
 		}
-
+	}
+	
+	if(res < 0) cnt = 0;
+	
 		// Search for the motor
+	
 	for (i = 0; i < cnt; i++) {
 		int r = libusb_get_device_descriptor (devs[i], &desc);
 		if (r < 0)
@@ -266,7 +270,7 @@ FN_INTERNAL int fnusb_open_subdevices(freenect_device *dev, int index)
 #ifdef BUILD_AUDIO
 		// TODO: check that the firmware has already been loaded; if not, upload firmware.
 		// Search for the audio
-		if ((ctx->enabled_subdevices & FREENECT_DEVICE_AUDIO) && !dev->usb_audio.dev && desc.idProduct == PID_NUI_AUDIO) {
+		if ((ctx->enabled_subdevices & FREENECT_DEVICE_AUDIO) && !dev->usb_audio.dev && (desc.idProduct == PID_NUI_AUDIO || desc.idProduct == PID_K4W_AUDIO)) {
 			// If the index given by the user matches our audio index
 			if (nr_audio == index) {
 				res = libusb_open (devs[i], &dev->usb_audio.dev);
