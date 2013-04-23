@@ -200,6 +200,19 @@ FN_INTERNAL int fnusb_open_subdevices(freenect_device *dev, int index)
 					dev->usb_cam.dev = NULL;
 					break;
 				}
+				unsigned char string_desc[256];
+				res = libusb_get_string_descriptor_ascii(dev->usb_cam.dev, desc.iSerialNumber, string_desc, 256);
+				res=0;
+				int i;
+				for(i=0;string_desc[res] != '\0';res++) res += string_desc[res] != '0' ? 1:0;
+				if(res){
+					/* Not the old kinect so we only set up the camera and adjust requirements*/ 
+					ctx->enabled_subdevices = FREENECT_DEVICE_CAMERA;
+					ctx->zero_plane_res = 344;
+				}else{
+					/* The good old kinect that tilts and stuff */
+					ctx->zero_plane_res = 322;
+				}
 #ifndef _WIN32
 				// Detach an existing kernel driver for the device
 				res = libusb_kernel_driver_active(dev->usb_cam.dev, 0);
@@ -226,6 +239,13 @@ FN_INTERNAL int fnusb_open_subdevices(freenect_device *dev, int index)
 		}
 
 		// Search for the motor
+	for (i = 0; i < cnt; i++) {
+		int r = libusb_get_device_descriptor (devs[i], &desc);
+		if (r < 0)
+			continue;
+
+		if (desc.idVendor != VID_MICROSOFT)
+			continue;
 		if ((ctx->enabled_subdevices & FREENECT_DEVICE_MOTOR) && !dev->usb_motor.dev && desc.idProduct == PID_NUI_MOTOR) {
 			// If the index given by the user matches our camera index
 			if (nr_mot == index) {
