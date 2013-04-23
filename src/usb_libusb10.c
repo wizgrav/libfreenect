@@ -191,7 +191,7 @@ FN_INTERNAL int fnusb_open_subdevices(freenect_device *dev, int index)
 			continue;
 
 		// Search for the camera
-		if ((ctx->enabled_subdevices & FREENECT_DEVICE_CAMERA) && !dev->usb_cam.dev && desc.idProduct == PID_NUI_CAMERA) {
+		if ((ctx->enabled_subdevices & FREENECT_DEVICE_CAMERA) && !dev->usb_cam.dev && (desc.idProduct == PID_NUI_CAMERA || desc.idProduct == PID_K4W_CAMERA)) {
 			// If the index given by the user matches our camera index
 			if (nr_cam == index) {
 				res = libusb_open (devs[i], &dev->usb_cam.dev);
@@ -202,13 +202,11 @@ FN_INTERNAL int fnusb_open_subdevices(freenect_device *dev, int index)
 				}
 				unsigned char string_desc[256];
 				res = libusb_get_string_descriptor_ascii(dev->usb_cam.dev, desc.iSerialNumber, string_desc, 256);
-				res=0;
-				int i;
-				for(i=0;string_desc[res] != '\0';res++) res += string_desc[res] != '0' ? 1:0;
+				for(j=0,res=0;string_desc[j] != '\0';j++) res += string_desc[j] != '0' ? 1:0;
 				if(res){
-					/* Not the old kinect so we only set up the camera and adjust requirements*/ 
+					/* Not the old kinect so we only set up the camera*/ 
 					ctx->enabled_subdevices = FREENECT_DEVICE_CAMERA;
-					ctx->zero_plane_res = 344;
+					ctx->zero_plane_res = 334;
 				}else{
 					/* The good old kinect that tilts and stuff */
 					ctx->zero_plane_res = 322;
