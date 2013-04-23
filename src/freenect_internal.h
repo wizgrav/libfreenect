@@ -53,6 +53,7 @@ struct _freenect_context {
 	fnusb_ctx usb;
 	freenect_device_flags enabled_subdevices;
 	freenect_device *first;
+	int zero_plane_res;
 };
 
 #define LL_FATAL FREENECT_LOG_FATAL
