@@ -200,17 +200,15 @@ FN_INTERNAL int fnusb_open_subdevices(freenect_device *dev, int index)
 					dev->usb_cam.dev = NULL;
 					break;
 				}
-				unsigned char string_desc[256];
-				res = libusb_get_string_descriptor_ascii(dev->usb_cam.dev, desc.iSerialNumber, string_desc, 256);
-				for(j=0,res=0;string_desc[j] != '\0';j++) res += string_desc[j] != '0' ? 1:0;
-				if(res){
+				if(desc.idProduct == PID_K4W_CAMERA || desc.bcdDevice != fn_le32(267)){
 					/* Not the old kinect so we only set up the camera*/ 
 					ctx->enabled_subdevices = FREENECT_DEVICE_CAMERA;
 					ctx->zero_plane_res = 334;
 				}else{
-					/* The good old kinect that tilts and stuff */
+					/* The good old kinect that tilts and tweets */
 					ctx->zero_plane_res = 322;
 				}
+				
 #ifndef _WIN32
 				// Detach an existing kernel driver for the device
 				res = libusb_kernel_driver_active(dev->usb_cam.dev, 0);
