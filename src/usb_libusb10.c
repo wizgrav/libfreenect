@@ -48,7 +48,7 @@ FN_INTERNAL int fnusb_num_devices(fnusb_ctx *ctx)
 		int r = libusb_get_device_descriptor (devs[i], &desc);
 		if (r < 0)
 			continue;
-		if (desc.idVendor == VID_MICROSOFT && desc.idProduct == PID_NUI_CAMERA)
+		if (desc.idVendor == VID_MICROSOFT && (desc.idProduct == PID_NUI_CAMERA || desc.idProduct == PID_K4W_CAMERA))
 			nr++;
 	}
 	libusb_free_device_list (devs, 1);
@@ -77,7 +77,7 @@ FN_INTERNAL int fnusb_list_device_attributes(fnusb_ctx *ctx, struct freenect_dev
 		int r = libusb_get_device_descriptor (devs[i], &desc);
 		if (r < 0)
 			continue;
-		if (desc.idVendor == VID_MICROSOFT && desc.idProduct == PID_NUI_CAMERA) {
+		if (desc.idVendor == VID_MICROSOFT && (desc.idProduct == PID_NUI_CAMERA || desc.idProduct == PID_K4W_CAMERA)) {
 			// Verify that a serial number exists to query.  If not, don't touch the device.
 			if (desc.iSerialNumber == 0) {
 				continue;
@@ -235,7 +235,7 @@ FN_INTERNAL int fnusb_open_subdevices(freenect_device *dev, int index)
 		}
 	}
 	
-	if(res < 0) cnt = 0;
+	if(ctx->enabled_subdevices = FREENECT_DEVICE_CAMERA || res < 0) cnt = 0;
 	
 		// Search for the motor
 	
