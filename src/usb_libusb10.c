@@ -235,7 +235,7 @@ FN_INTERNAL int fnusb_open_subdevices(freenect_device *dev, int index)
 		}
 	}
 	
-	if(ctx->enabled_subdevices = FREENECT_DEVICE_CAMERA || res < 0) cnt = 0;
+	if(ctx->enabled_subdevices == FREENECT_DEVICE_CAMERA || res < 0) cnt = 0;
 	
 		// Search for the motor
 	
