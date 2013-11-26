@@ -29,7 +29,7 @@
 #include "libfreenect.h"
 #include <libusb.h>
 
-#if defined(__APPLE__)
+#if defined(__NOAPPLE__)
 /*
   From Github Issue 22 by Roefer -
   https://github.com/OpenKinect/libfreenect/issues/#issue/22
